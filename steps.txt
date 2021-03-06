@@ -1,34 +1,5 @@
 az vmss list-instance-connection-info --resource-group acdnd-c4-project --name udacity-vmss
 
-
-ssh -p 50000 azureuser@20.73.151.191
-
--i vm-scale-set-ric-test_key.pem
-
-ssh azureuser@20.73.151.191
-
-
-az network public-ip show `
-  --resource-group acdnd-c4-project `
-  --name udacity-vmss-lb `
-  --query '[ipAddress]' `
-  --output tsv
-  
-  
----- 20.73.237.159:50002  
-  
-  
-ssh -p 50000 udacityadmin@20.73.151.191 -i ~/.ssh/id_rsa
-
-
-ssh-copy-id -i ~/.ssh/keyvmss.pub udacityadmin@20.73.151.191
-
-cat ~/.ssh/id_rsa.pub | ssh udacityadmin@20.73.151.191 "mkdir ~/.ssh; cat >> ~/.ssh/authorized_keys"
-
-ssh udacityadmin@20.73.151.191 "umask 077; test -d .ssh || mkdir .ssh ; cat >> .ssh/authorized_keys || exit 1" < C:\Users\Ricardo e Achira.RICARDOF\.ssh\id_rsa.pub
-
-
-
 --------------------------------
 --Tive que desabilitar o firewall da minha maquina
 
@@ -36,3 +7,16 @@ username: udacityadmin
 password: Papibaquig#1
 
 ssh -p 50002 udacityadmin@51.124.134.87
+
+
+
+---------------- VM2 -------------------
+1) ssh -p 50003 udacityadmin@51.124.134.87
+
+2) run
+
+ERRADO) Rodado primeira vez
+mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token qr3h6jaxrrqtwhsg7z64hk6msz2ugpkkyljotqqhcvjlo7inrwca --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token qr3h6jaxrrqtwhsg7z64hk6msz2ugpkkyljotqqhcvjlo7inrwca; ./run.sh; fi
+
+CORRETO )
+mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 3onb2o37ziofmazulemx55z5epf4qyoh2hzwinx65lb3hwe6f4ja --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 3onb2o37ziofmazulemx55z5epf4qyoh2hzwinx65lb3hwe6f4ja; ./run.sh; fi
