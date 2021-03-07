@@ -6,17 +6,14 @@ az vmss list-instance-connection-info --resource-group acdnd-c4-project --name u
 username: udacityadmin
 password: Papibaquig#1
 
-ssh -p 50002 udacityadmin@51.124.134.87
+
+---------------- VM1 -------------------
+ssh -p 50001 udacityadmin@65.52.157.5
 
 
+mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token eadjnahvz43ywnybfhvjo5a5dv2gziacihcuxdv7c4izk36sgucq --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token eadjnahvz43ywnybfhvjo5a5dv2gziacihcuxdv7c4izk36sgucq; ./run.sh; fi
 
 ---------------- VM2 -------------------
-1) ssh -p 50003 udacityadmin@51.124.134.87
+1) ssh -p 50002 udacityadmin@65.52.157.5
 
 2) run
-
-ERRADO) Rodado primeira vez
-mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token qr3h6jaxrrqtwhsg7z64hk6msz2ugpkkyljotqqhcvjlo7inrwca --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token qr3h6jaxrrqtwhsg7z64hk6msz2ugpkkyljotqqhcvjlo7inrwca; ./run.sh; fi
-
-CORRETO )
-mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 3onb2o37ziofmazulemx55z5epf4qyoh2hzwinx65lb3hwe6f4ja --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND_c4_Project_VM2" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 3onb2o37ziofmazulemx55z5epf4qyoh2hzwinx65lb3hwe6f4ja; ./run.sh; fi

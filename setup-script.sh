@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Variables
-resourceGroup="acdnd-c4-project1111"
+resourceGroup="acdnd-c4-project"
 location="westeurope"
 osType="UbuntuLTS"
-vmssName="udacity-vmss"
+vmssName="udacity-vmss1"
 adminName="udacityadmin"
 storageAccount="udacitydiag$RANDOM"
 bePoolName="$vmssName-bepool"
@@ -65,8 +65,10 @@ az vmss create \
   --custom-data cloud-init.txt \
   --upgrade-policy-mode automatic \
   --admin-username $adminName \
-  --generate-ssh-keys \
+  --admin-password "Papibaquig#1"
   --verbose
+
+  #--generate-ssh-keys \
 
 echo "VM scale set created: $vmssName"
 
