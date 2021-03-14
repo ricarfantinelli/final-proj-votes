@@ -1,4 +1,4 @@
-az vmss list-instance-connection-info --resource-group acdnd-c4-project --name udacity-vmss
+az vmss list-instance-connection-info --resource-group acdnd-c4-project --name udacity-vmss1
 
 --------------------------------
 --Tive que desabilitar o firewall da minha maquina
@@ -8,12 +8,190 @@ password: Papibaquig#1
 
 
 ---------------- VM1 -------------------
-ssh -p 50001 udacityadmin@65.52.157.5
+
+ssh -p 50001 udacityadmin@65.52.147.83
 
 
-mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token eadjnahvz43ywnybfhvjo5a5dv2gziacihcuxdv7c4izk36sgucq --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token eadjnahvz43ywnybfhvjo5a5dv2gziacihcuxdv7c4izk36sgucq; ./run.sh; fi
+ssh -p 50002 udacityadmin@23.97.208.26
+--23.97.208.26:50001
 
----------------- VM2 -------------------
-1) ssh -p 50002 udacityadmin@65.52.157.5
+mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 5dvkgudyg4dkabmskeuyk5ala3uqzq6ebwtj3h7k4rqjv6glqmaq --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 5dvkgudyg4dkabmskeuyk5ala3uqzq6ebwtj3h7k4rqjv6glqmaq; ./run.sh; fi
 
-2) run
+
+
+mkdir azagent;cd azagent;curl -fkSL -o vstsagent.tar.gz https://vstsagentpackage.azureedge.net/agent/2.183.1/vsts-agent-linux-x64-2.183.1.tar.gz;tar -zxvf vstsagent.tar.gz; if [ -x "$(command -v systemctl)" ]; then ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 6dwcb2s3ptpjsihbs4upvgeelrqg772ds27po6lkazttunl4gbaq --runasservice; sudo ./svc.sh install; sudo ./svc.sh start; else ./config.sh --environment --environmentname "ACDND-C4-Project" --acceptteeeula --agent $HOSTNAME --url https://dev.azure.com/fantaere0927/ --work _work --projectname 'Votes' --auth PAT --token 6dwcb2s3ptpjsihbs4upvgeelrqg772ds27po6lkazttunl4gbaq; ./run.sh; fi
+
+
+
+-------------
+
+The instruction is really confusing. How does the AKS part connected to the azure-vote-front?
+
+When we work on the azure-vote-front, it uses the ssh and python3 main.py to run the FLASK_APP. How does it linked to the AKS Kubernetes?
+
+I got the following when trying the add the autoscale:
+
+kubectl autoscale deployment azure-vote-front --cpu-percent=70 --min=1 --max=10
+Error from server (NotFound): deployments.apps "azure-vote-front" not found
+Should I start the azure-vote-front before running the AKS/kubectl?
+
+Also, why do I need 8 pods to run in the cluster?
+
+
+-----
+I think I kinda of got it. The project instruction is not clever. You need to run the following before the deployment done.
+
+PS C:\Users\iiiiy\Documents\GitHub\EnhancingApplication> kubectl apply -f azure-vote.yaml
+deployment.apps/azure-vote-back created
+service/azure-vote-back created
+deployment.apps/azure-vote-front created
+service/azure-vote-front created
+
+PS C:\Usersiiii\Documents\GitHub\EnhancingApplication> kubectl get service azure-vote-front --watch
+NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
+azure-vote-front LoadBalancer 10.0.97.169 52.143.79.184 80:31327/TCP 41s
+
+
+--------------- Increase number of PODS In Kubernetes ---------------
+Thanks for asking these important questions:-
+
+Yes we would need to create the container registry and docker image for the Kubernetes Cluster.
+Please follow the below steps to cause load on system
+kubectl run -it --rm load-generator --image=busybox /bin/sh
+
+Hit enter for command prompt
+
+while true; do wget -q -O- https://udacity-cl-acdnd-c4-project-08cf22-117b44c0.hcp.westeurope.azmk8s.io:443; done
+
+This will send an infinite loop of queries to the cluster and increase load on the cluster.
+You can check the increase in number of pods by using below command:-
+
+
+------------------
+
+Hi Todd,
+
+You can provide Ip address of your application. The idea is to create a dummy load such that autoscale of pods occur.
+
+1. Use below command to generate a load
+
+while true; do
+  wget 10.244.0.10 &
+done
+
+
+2. The wget package is pre-installed on most Linux distributions today. if it is not available you can get it by using below command:-
+
+Installing Wget on Ubuntu and Debian
+sudo apt install wget
+
+Installing Wget on CentOS and Fedora
+sudo yum install wget
+
+kubectl get hpa
+
+
+------------------------------------------------------------------
+------------------------ Create container ------------------------
+------------------------------------------------------------------
+ 
+1) Create DockerFile
+
+2) DockerFile has been created. Then you need to create an image.
+c:\> docker build -t microsoft/azure-vote-front:v1 .
+
+3) testing locally the function conternarized
+no need for -e MyDBConnectionString=$cosmosDbConnectionString as I didn't pass env variables within my application
+
+check if there is any docker container running
+c:\> docker ps
+
+if there is then grab the id and
+c:\> docker stop <id>
+
+c:\> docker run -p8080:80 -e FLASK_APP=main.py microsoft/azure-vote-front:v1
+
+
+-------------------
+
+Git Bash:
+
+> ssh-keygen -f ~/.ssh/aks-ssh
+
+Now create the Azure AKS cluster while pointing to this new SSH key with:
+
+> az aks create --resource-group YourResourceGroup --name YourClusterName --node-count 3 --ssh-key-value ~\.ssh\aks-ssh.pub
+
+------------------
+- Run the container
+
+PS> kubectl get service azure-vote-front --watch
+
+- Information about the cluser
+PS> kubectl cluster-info
+
+- Node list
+PS> az aks nodepool list --resource-group acdnd-c4-project --cluster-name udacity-cluster
+
+- Checking the current status of autoscaler:
+PS> kubectl get hpa 
+
+
+- Stress Kubernets server:
+  kubectl run -i --tty load-generator --image=microsoft/azure-vote-front:v1 /bin/sh
+  while true; do wget -O- 20.54.166.109; done
+
+
+-----------------
+Runbook
+----------------
+# Get current scale set
+$vmss = Get-AzVmss -ResourceGroupName "acdnd-c4-project" -VMScaleSetName "udacity-vmss1"
+
+# Set and update the capacity of your scale set
+$vmss.sku.capacity = 3
+Update-AzVmss -ResourceGroupName "acdnd-c4-project" -Name "udacity-vmss1" -VirtualMachineScaleSet $vmss
+
+
+
+Import-Module Az.Compute
+
+Workflow scaleupafter2cpu
+{
+    InlineScript {
+        # Get current scale set
+        $vmss = Get-AzVmss -ResourceGroupName "acdnd-c4-project" -VMScaleSetName "udacity-vmss1"
+
+        # Set and update the capacity of your scale set
+        $vmss.sku.capacity = 3
+        Update-AzVmss -ResourceGroupName "acdnd-c4-project" -Name "udacity-vmss1" -VirtualMachineScaleSet $vmss
+    }
+}
+
+---------------
+
+
+
+--AKS---
+while true; do wget -O- 20.54.166.109; done
+
+--VMSS--
+FOR /L %i IN (1,1,10) DO wget -O- 23.97.208.26
+
+
+FOR /L %i IN (1,1,10) DO echo "test"
+
+---------------------
+
+
+
+$ret = InlineScript {
+    # Get current scale set
+    $vmss = Get-AzVmss -ResourceGroupName "acdnd-c4-project" -VMScaleSetName "udacity-vmss1"
+
+    # Set and update the capacity of your scale set
+    $vmss.sku.capacity = 3
+    Update-AzVmss -ResourceGroupName "acdnd-c4-project" -Name "udacity-vmss1" -VirtualMachineScaleSet $vmss
+}
+
+Write-Output "Scaling is finished."

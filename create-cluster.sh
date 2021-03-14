@@ -19,7 +19,7 @@ az aks create \
 --name $clusterName \
 --node-count 1 \
 --enable-addons monitoring \
---generate-ssh-keys
+--ssh-key-value ~\.ssh\aks-ssh.pub
 
 echo "AKS cluster created: $clusterName"
 
