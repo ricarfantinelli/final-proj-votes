@@ -127,7 +127,7 @@ Now create the Azure AKS cluster while pointing to this new SSH key with:
 
 PS> kubectl get service azure-vote-front --watch
 
-- Information about the cluser
+- Information about the cluserDavid Draiman
 PS> kubectl cluster-info
 
 - Node list
@@ -139,7 +139,7 @@ PS> kubectl get hpa
 
 - Stress Kubernets server:
   kubectl run -i --tty load-generator --image=microsoft/azure-vote-front:v1 /bin/sh
-  while true; do wget -O- 20.54.166.109; done
+  while true; do wget -O- <IP>; done
 
 
 -----------------
