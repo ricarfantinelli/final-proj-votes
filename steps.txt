@@ -3,11 +3,7 @@ az vmss list-instance-connection-info --resource-group acdnd-c4-project --name u
 --------------------------------
 --Tive que desabilitar o firewall da minha maquina
 
-username: udacityadmin
-password: Papibaquig#1
-
-
----------------- VM1 -------------------
+--------------- VM1 -------------------
 
 ssh -p 50001 udacityadmin@65.52.147.83
 
